@@ -21,29 +21,58 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<RestaurantResource>> getRestaurants() {
+        List<Restaurant> restaurants = restaurantService.retrieveRestaurants();
+
+        return ResponseEntity.ok(convertToRestaurantResources(restaurants));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantResource> getRestaurant(@PathVariable String id) {
-        Restaurant Restaurant = restaurantService.retrieveRestaurant(id);
+        Restaurant restaurant = restaurantService.retrieveRestaurant(id);
 
-        return ResponseEntity.ok(new RestaurantResource(Restaurant));
+        return ResponseEntity.ok(new RestaurantResource(restaurant));
     }
 
     @PostMapping
-    public ResponseEntity<RestaurantResource> createRestaurant(@RequestBody RestaurantResource restaurantResource) {
-        Restaurant Restaurant = restaurantService.createRestaurant(new Restaurant(restaurantResource));
+    public ResponseEntity<?> createRestaurant(@RequestBody RestaurantResource restaurantResource) {
+        //Check that all our required fields are present
+        if (restaurantResource.getName() == null) {
+            return ResponseEntity.badRequest().body("missing name");
+        }
 
-        return new ResponseEntity<>(new  RestaurantResource(Restaurant), HttpStatus.CREATED);
+        if (restaurantResource.getAddress() == null) {
+            return ResponseEntity.badRequest().body("missing address");
+        } else if (restaurantResource.getAddress().getAddressLine1() == null ||
+                restaurantResource.getAddress().getCity() == null ||
+                restaurantResource.getAddress().getState() == null ||
+                restaurantResource.getAddress().getZipCode() == null) {
+            return ResponseEntity.badRequest().body("missing required address fields");
+        }
+
+        Restaurant restaurant = restaurantService.createRestaurant(new Restaurant(restaurantResource));
+        return new ResponseEntity<>(new  RestaurantResource(restaurant), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<RestaurantResource> updateRestaurant(@PathVariable String id, @RequestBody RestaurantResource restaurantResource) {
-        Restaurant updatedRestaurant = restaurantService.updateRestaurant(id, new Restaurant(restaurantResource));
+    @PatchMapping("/{id}/name")
+    public ResponseEntity<RestaurantResource> updateRestaurantName(@PathVariable String id, @RequestBody String name) {
+        Restaurant updatedRestaurant = restaurantService.updateRestaurant(id, name);
 
         return ResponseEntity.ok(new RestaurantResource(updatedRestaurant));
     }
 
     @PatchMapping("/{id}/address")
-    public ResponseEntity<RestaurantResource> updateRestaurantsAddress(@PathVariable String id, @RequestBody AddressResource addressResource) {
+    public ResponseEntity<?> updateRestaurantsAddress(@PathVariable String id, @RequestBody AddressResource addressResource) {
+        if (addressResource == null) {
+            return ResponseEntity.badRequest().body("missing address");
+        } else if (addressResource.getAddressLine1() == null ||
+                addressResource.getCity() == null ||
+                addressResource.getState() == null ||
+                addressResource.getZipCode() == null) {
+            return ResponseEntity.badRequest().body("missing required address fields");
+        }
+
         Restaurant updatedRestaurant = restaurantService.updateRestaurantsAddress(id, new Address(addressResource));
 
         return ResponseEntity.ok(new RestaurantResource(updatedRestaurant));

@@ -15,11 +15,11 @@ public class AddressModel {
     private String zipCode;
 
     public AddressModel(Address address) {
-        this.addressLine1 = address.addressLine1;
-        this.addressLine2 = address.addressLine2;
-        this.addressLine3 = address.addressLine3;
-        this.city = address.city;
-        this.state = address.state;
-        this.zipCode = address.zipCode;
+        this.addressLine1 = address.getAddressLine1();
+        this.addressLine2 = address.getAddressLine2();
+        this.addressLine3 = address.getAddressLine3();
+        this.city = address.getCity();
+        this.state = address.getState();
+        this.zipCode = address.getZipCode();
     }
 }

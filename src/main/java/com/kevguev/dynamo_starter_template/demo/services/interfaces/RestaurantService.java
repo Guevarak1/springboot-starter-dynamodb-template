@@ -10,11 +10,9 @@ public interface RestaurantService {
 
     List<Restaurant> retrieveRestaurants();
 
-    List<Restaurant> retrieveRestaurants(String lastName);
-
     Restaurant createRestaurant(Restaurant restaurant);
 
-    Restaurant updateRestaurant(String id, Restaurant restaurant);
+    Restaurant updateRestaurant(String id, String name);
 
     Restaurant updateRestaurantsAddress(String id, Address address);
 

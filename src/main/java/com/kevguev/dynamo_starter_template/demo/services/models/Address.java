@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Address {
-    public String addressLine1;
-    public String addressLine2;
-    public String addressLine3;
-    public String city;
-    public String state;
-    public String zipCode;
+    private String addressLine1;
+    private String addressLine2;
+    private String addressLine3;
+    private String city;
+    private String state;
+    private String zipCode;
 
     public Address(AddressResource address) {
         this.addressLine1 = address.addressLine1;

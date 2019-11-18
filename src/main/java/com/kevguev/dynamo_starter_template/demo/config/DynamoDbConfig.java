@@ -6,16 +6,15 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
-import com.kevguev.dynamo_starter_template.demo.data.repositories.RestaurantRepository;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.kevguev.dynamo_starter_template.demo.data.repositories.interfaces.RestaurantRepository;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
 
 //https://derjust.github.io/spring-data-dynamodb/
 @Configuration
@@ -51,5 +50,10 @@ public class DynamoDbConfig {
     public AmazonDynamoDB amazonDynamoDB() {
         return AmazonDynamoDBClientBuilder.standard().withCredentials(amazonAWSCredentialsProvider())
                 .withRegion(Regions.US_EAST_1).build();
+    }
+
+    @Bean
+    public DynamoDB dynamoDB() {
+        return new DynamoDB(amazonDynamoDB());
     }
 }
